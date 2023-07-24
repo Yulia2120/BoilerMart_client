@@ -1,0 +1,108 @@
+import { $boilerParts, setBoilerPartsByPopularity, setBoilerPartsCheapFirst, setBoilerPartsExpensiveFirst } from "@/context/boilerParts"
+import { $mode } from "@/context/mode"
+import { controlStyles, menuStyles, selectStyles } from "@/styles/catalog/select"
+import { optionStyles } from "@/styles/searchInput"
+import { IOption, SelectOptionType } from "@/types/common"
+import { createSelectOption } from "@/utils/common"
+import { categoriesOptions } from "@/utils/selectContents"
+import { useStore } from "effector-react"
+import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
+import Select from "react-select"
+
+const FilterSelect = () => {
+    const mode = useStore($mode)
+    const boilerParts = useStore($boilerParts)
+    const [categoryOption, setCategoryOption] = useState<SelectOptionType>(null)
+    const router = useRouter()
+ 
+    //устанавливаем состояние сохранения фильтра при перезагрузке страницы
+    //boilerParts.rows - данные пришли с сервера
+    useEffect(() => {
+        if(boilerParts.rows){
+            switch (router.query.first) {
+                case 'cheap':
+                updateCategoryOption('Сначала дешевые')
+                setBoilerPartsCheapFirst()
+                
+                break
+                case 'expensive':
+                updateCategoryOption('Сначала дорогие')
+                setBoilerPartsExpensiveFirst()
+                
+                break
+                case 'popular':
+                updateCategoryOption('По популярности')
+                setBoilerPartsByPopularity()
+                updateRoteParam('popular')
+                break
+                default:
+                updateCategoryOption('Сначала дешевые')
+                setBoilerPartsCheapFirst()
+                break
+    
+        }
+        }
+
+   
+
+    }, [boilerParts.rows, router.query.first])
+
+    const updateCategoryOption = (value: string) =>
+     setCategoryOption({value, label:value})
+
+    //устанавливаем параметр в url
+    const updateRoteParam = (first: string) => router.push({
+        query: {
+            ...router.query,
+            first
+        }
+    }, undefined, {shallow: true})
+
+    const handleSortOptionChange = (selectedOption: SelectOptionType) =>{
+        setCategoryOption(selectedOption)
+
+        switch ((selectedOption as IOption).value){
+                case 'Сначала дешевые':
+                setBoilerPartsCheapFirst()
+                updateRoteParam('cheap')
+                break
+                case 'Сначала дорогие':
+                setBoilerPartsExpensiveFirst()
+                updateRoteParam('expensive')
+                break
+                case 'По популярности':
+                setBoilerPartsByPopularity()
+                updateRoteParam('popular')
+                break
+        }
+    }
+    return (
+        <Select 
+        placeholder="Я ищу..." 
+        value={categoryOption || createSelectOption('Сначала дешевые')} 
+        onChange={handleSortOptionChange}
+        styles={{
+            ...selectStyles,
+            control: (defaultStyles) => ({
+            ...controlStyles(defaultStyles, mode)
+            }),
+            input: (defaultStyles) => ({
+                ...defaultStyles,
+                color: mode === 'dark' ? '#f2f2f2' : '#222222'
+            }),
+            menu: (defaultStyles) => ({
+                ...menuStyles(defaultStyles, mode)
+            }),
+            option: (defaultStyles, state) => ({
+                ...optionStyles(defaultStyles, state, mode)
+            })
+        }}
+        isSearchable={false}
+        options={categoriesOptions}
+        />
+
+    )
+}
+
+export default FilterSelect
