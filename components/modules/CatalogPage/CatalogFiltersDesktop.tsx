@@ -9,7 +9,7 @@ import { ICatalogFilterDesktopProps } from "@/types/catalog"
 import spinnerStyles from '@/styles/spinner/index.module.scss'
 
 function CatalogFiltersDesktop({
-    priceRange, setPriceRange, setIsPriceRangeChanged, resetFilterBtnDisabled, spinner, resetFilters
+    priceRange, setPriceRange, setIsPriceRangeChanged, resetFilterBtnDisabled, spinner, resetFilters, applyFilters
 }: ICatalogFilterDesktopProps) {
     const mode = useStore($mode)
     const boilerManufacturers = useStore($boilerManufacturers)
@@ -53,6 +53,7 @@ function CatalogFiltersDesktop({
             <div className={styles.filters__actions}>
                 <button className={styles.filters__actions__show}
                     disabled={spinner || resetFilterBtnDisabled}
+                    onClick={applyFilters}
                 >
                     {spinner ? <span className={spinnerStyles.spinner} style={{ top: 6, left: '47%' }} /> : 'Показать'}
                 </button>

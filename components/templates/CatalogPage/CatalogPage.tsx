@@ -4,7 +4,7 @@ import { AnimatePresence } from 'framer-motion'
 import ManufacturersBock from '@/components/modules/CatalogPage/ManufacturersBlock'
 import FilterSelect from '@/components/modules/CatalogPage/FilterSelect'
 import { getBoilerPartsFx } from '@/app/api/boilerParts'
-import { $boilerManufacturers, $boilerParts, $partsManufacturers, setBoilerManufacturers, setBoilerParts, setPartsManufacturers, updateBoilerManufacturer, updatePartsManufacturer } from '@/context/boilerParts'
+import { $boilerManufacturers, $boilerParts, $filteredBoilerParts, $partsManufacturers, setBoilerManufacturers, setBoilerParts, setPartsManufacturers, updateBoilerManufacturer, updatePartsManufacturer } from '@/context/boilerParts'
 import { toast } from 'react-toastify'
 import { useEffect, useState } from 'react'
 import ReactPaginate from 'react-paginate'
@@ -21,9 +21,11 @@ const CatalogPage = ({query}: {query: IQueryParams}) => {
 const mode = useStore($mode)
 const boilerManufacturers = useStore($boilerManufacturers)
 const partsManufacturers = useStore($partsManufacturers)
+const filteredBoilerParts = useStore($filteredBoilerParts)
 const boilerParts = useStore($boilerParts)
 const [spinner, setSpinner] = useState(false)
 const [priceRange, setPriceRange] = useState([1000, 9000])
+const [isFilterInQuery, setisFilterInQuery] = useState(false)
 const [isPriceRangeChanged, setIsPriceRangeChanged] = useState(false)
 const pagesCount = Math.ceil(boilerParts.count / 20) //чтобы всегда получалось целое число
 const isValidOffset = query.offset && !isNaN(+query.offset) && +query.offset > 0
@@ -41,8 +43,9 @@ const resetFilterBtnDisabled = !(
 
 useEffect(() => {
     loadBoilerParts()
-}, [])
+}, [filteredBoilerParts, isFilterInQuery])
 
+console.log(boilerParts.rows)
 
 const loadBoilerParts = async () => {
     try {
@@ -71,21 +74,26 @@ const loadBoilerParts = async () => {
                 {shallow: true}
                 )
                 setCurrentPage(0)
-                setBoilerParts(data)
+                setBoilerParts(isFilterInQuery ? filteredBoilerParts : data)
                 return
             }
+            const offset = +query.offset - 1
+            const result = await getBoilerPartsFx(
+                `/boiler-parts?limit=20&offset=${offset}`
+                )
+            setCurrentPage(offset)
+            setBoilerParts(isFilterInQuery ? filteredBoilerParts : result)
+            return
         }
+        setCurrentPage(0)
+        setBoilerParts(isFilterInQuery ? filteredBoilerParts : data)
 
-        const offset = +query.offset - 1
-        const result = await getBoilerPartsFx(`/boiler-parts?limit=20&offset=${offset}`)
-        setCurrentPage(offset)
 
-        setBoilerParts(result)
     }catch(error)
     {
         toast.error((error as Error).message)
     }finally {
-        setSpinner(false)
+        setTimeout(() => setSpinner(false), 1000)
     }
 }
     const resetPagination = (data: IBoilerParts) => {
@@ -95,6 +103,7 @@ const loadBoilerParts = async () => {
 
     const handlePageChange = async ({selected}:{selected:  number}) => {
         try{
+            setSpinner(true)
             const data = await getBoilerPartsFx('/boiler-parts?limit=20&offset=0')
 
             if(selected > pagesCount){
@@ -102,10 +111,15 @@ const loadBoilerParts = async () => {
                 return
             }
             if(isValidOffset && +query.offset > Math.ceil(data.count / 2)){
-                resetPagination(data)
+                resetPagination(isFilterInQuery ? filteredBoilerParts : data)
                 return
             }
-            const result = await getBoilerPartsFx(`/boiler-parts?limit=20&offset=${selected}`)
+            const result = await getBoilerPartsFx(
+                `/boiler-parts?limit=20&offset=
+                    ${selected}${isFilterInQuery && router.query.boiler ? `&boiler=${router.query.boiler}` : ''}
+                    ${isFilterInQuery && router.query.parts ? `&parts=${router.query.parts}` : ''}
+                    ${isFilterInQuery && router.query.priceFrom && 
+                    router.query.priceTo ? `&priceFrom=${router.query.priceFrom}&priceTo=${router.query.priceTo}` : ''}`)
 
             router.push({
                 query: {
@@ -118,7 +132,9 @@ const loadBoilerParts = async () => {
             setBoilerParts(result)
 
         }catch(error) {
-
+            toast.error((error as Error).message)
+        }finally{
+            setTimeout(() => setSpinner(false), 1000)
         }
     }
 
@@ -126,7 +142,7 @@ const loadBoilerParts = async () => {
         try{
             const data = await getBoilerPartsFx('/boiler-parts?limit=20&offset=0')
             const params = router.query
-      
+      //удаляем параметры поисковой строки
             delete params.boiler
             delete params.parts
             delete params.priceFrom
@@ -177,22 +193,26 @@ const loadBoilerParts = async () => {
                     <button className={`${styles.catalog__top__reset} ${darkModeClass}`} 
                     disabled={resetFilterBtnDisabled}
                     onClick={resetFilters}
-                    >Сбросить фильтр</button>
-                    <FilterSelect/>
+                    >Сбросить фильтр
+                    </button>
+                    <FilterSelect setSpinner={setSpinner}/>
                 </div>
                 </div>
                 <div className={styles.catalog__bottom}>
                     <div className={styles.catalog__bottom__inner}>
                         <CatalogFilters
-                             priceRange={priceRange}
-                             setPriceRange={setPriceRange}
-                             setIsPriceRangeChanged={setIsPriceRangeChanged}
-                             resetFilterBtnDisabled={resetFilterBtnDisabled}
-                             resetFilters={resetFilters}
-                        />
+                            priceRange={priceRange}
+                            setPriceRange={setPriceRange}
+                            setIsPriceRangeChanged={setIsPriceRangeChanged}
+                            resetFilterBtnDisabled={resetFilterBtnDisabled}
+                            resetFilters={resetFilters}
+                            currentPage={currentPage}
+                            setIsFilterInQuery={setisFilterInQuery} 
+                            isPriceRangeChanged={isPriceRangeChanged}                           
+                             />
                         {spinner ? (
                             <ul className={skeletonStyles.skeleton}>
-                                {Array.from(new Array(8)).map((_, i) => (
+                                {Array.from(new Array(20)).map((_, i) => (
                                     <li key={i} className={`${skeletonStyles.skeleton__item} ${mode === 'dark' ? `${skeletonStyles.dark_mode}` : ''}`}>
                                         <div className={skeletonStyles.skeleton__item__light}/>
                                     </li>

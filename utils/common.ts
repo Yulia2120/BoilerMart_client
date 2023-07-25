@@ -1,3 +1,4 @@
+import { NextRouter } from "next/router"
 
 
 export const getWindowWidth = () => {
@@ -35,4 +36,11 @@ export const getWindowWidth = () => {
     S4()
   )
 }
+
+export const getQueryParamOnFirstRender = (
+  queryName: string,
+  router: NextRouter
+) =>
+  router.query[queryName] ||
+  router.asPath.match(new RegExp(`[&?]${queryName}=(.*)(&|$)`))
   

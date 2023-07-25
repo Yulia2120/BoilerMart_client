@@ -12,6 +12,7 @@ export const setBoilerParts = boilerParts.createEvent<IBoilerParts>()
 export const setBoilerPartsCheapFirst = boilerParts.createEvent()  //сначала дешевые
 export const setBoilerPartsExpensiveFirst = boilerParts.createEvent()  //сначала дорогие
 export const setBoilerPartsByPopularity = boilerParts.createEvent()  // популярные
+export const setFilteredBoilerParts = boilerParts.createEvent()
 export const setBoilerManufacturers = boilerParts.createEvent<IFilterCheckboxItem[]>()
 export const updateBoilerManufacturer = boilerParts.createEvent<IFilterCheckboxItem>()
 export const setPartsManufacturers = boilerParts.createEvent<IFilterCheckboxItem[]>()
@@ -63,3 +64,9 @@ export const $boilerParts = boilerParts
     .on(updatePartsManufacturer, (state, payload) => [
         ...updateManufacturer(state, payload.id as string, {checked: payload.checked})
     ])
+
+
+    export const $filteredBoilerParts = boilerParts
+    .createStore<IBoilerParts>({} as IBoilerParts)
+    .on(setFilteredBoilerParts, (_, parts) => parts)
+   

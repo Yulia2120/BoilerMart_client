@@ -10,7 +10,7 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import Select from "react-select"
 
-const FilterSelect = () => {
+const FilterSelect = ({setSpinner}: {setSpinner: () => void}) => {
     const mode = useStore($mode)
     const boilerParts = useStore($boilerParts)
     const [categoryOption, setCategoryOption] = useState<SelectOptionType>(null)
@@ -44,8 +44,6 @@ const FilterSelect = () => {
         }
         }
 
-   
-
     }, [boilerParts.rows, router.query.first])
 
     const updateCategoryOption = (value: string) =>
@@ -59,7 +57,8 @@ const FilterSelect = () => {
         }
     }, undefined, {shallow: true})
 
-    const handleSortOptionChange = (selectedOption: SelectOptionType) =>{
+    const handleSortOptionChange = (selectedOption: SelectOptionType) => {
+        setSpinner(true)
         setCategoryOption(selectedOption)
 
         switch ((selectedOption as IOption).value){
@@ -76,6 +75,7 @@ const FilterSelect = () => {
                 updateRoteParam('popular')
                 break
         }
+        setTimeout(() => setSpinner(false), 1000)
     }
     return (
         <Select 
