@@ -35,26 +35,32 @@ export interface IFilterManufacturerAccordionProps {
     updateManufacturer: Event<IFilterCheckboxItem>
 }
 
-export interface ICatalogFiltersProps {
+interface ICatalogBaseTypes {
     priceRange: number[]
     setPriceRange: (arg0: number[]) => void
     setIsPriceRangeChanged: (arg0: boolean) => void
     resetFilterBtnDisabled: boolean
     resetFilters: VoidFunction
+}
+
+export interface ICatalogFiltersProps extends ICatalogBaseTypes{
     isPriceRangeChanged: boolean
     currentPage: number
     setIsFilterInQuery:(arg0: boolean) => void
 }
 
-export interface IPriceRangeProps {
-    priceRange: number[]
-    setPriceRange: (arg0: number[]) => void
-    setIsPriceRangeChanged: (arg0: boolean) => void
-}
-
-export interface ICatalogFilterDesktopProps extends ICatalogFiltersProps{
+export type IPriceRangeProps = ICatalogBaseTypes
+   
+export interface ICatalogFilterDesktopProps extends ICatalogBaseTypes{
     spinner: boolean
     applyFilters: VoidFunction
     
+}
+
+export interface ICatalogFilterMobileProps extends ICatalogBaseTypes{
+    spinner: boolean
+    applyFilters: VoidFunction
+    closePopup: VoidFunction
+    filtersMobileOpen: boolean
 }
 
