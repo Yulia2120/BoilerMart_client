@@ -64,3 +64,11 @@ export interface ICatalogFilterMobileProps extends ICatalogBaseTypes{
     filtersMobileOpen: boolean
 }
 
+export interface IFiltersPopupTop {
+    resetBtnText: string
+    title: string
+    resetFilters: VoidFunction
+    resetFilterBtnDisabled: boolean
+    closePopup: VoidFunction
+}
+
