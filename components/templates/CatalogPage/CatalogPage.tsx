@@ -15,6 +15,8 @@ import { useRouter } from 'next/router'
 import { IBoilerParts } from '@/types/boierparts'
 import styles from '@/styles/catalog/index.module.scss'
 import CatalogFilters from '@/components/modules/CatalogPage/CatalogFilters'
+import { usePopup } from '@/hooks/usePopup'
+import { checkQueryParams } from '@/utils/catalog'
 
 const CatalogPage = ({query}: {query: IQueryParams}) => {
 
@@ -40,6 +42,8 @@ const resetFilterBtnDisabled = !(
     isAnyBoilerManufacturerChecked ||
     isAnyPartsManufacturerChecked
     )
+
+const {toggleOpen, open, closePopup} = usePopup()
 
 useEffect(() => {
     loadBoilerParts()
@@ -114,12 +118,20 @@ const loadBoilerParts = async () => {
                 resetPagination(isFilterInQuery ? filteredBoilerParts : data)
                 return
             }
+
+            const {
+                isValidBoilerQuery,
+                isValidPartsQuery,
+                isValidPriceQuery,
+            } = checkQueryParams(router)
+
+
             const result = await getBoilerPartsFx(
                 `/boiler-parts?limit=20&offset=
-                    ${selected}${isFilterInQuery && router.query.boiler ? `&boiler=${router.query.boiler}` : ''}
-                    ${isFilterInQuery && router.query.parts ? `&parts=${router.query.parts}` : ''}
-                    ${isFilterInQuery && router.query.priceFrom && 
-                    router.query.priceTo ? `&priceFrom=${router.query.priceFrom}&priceTo=${router.query.priceTo}` : ''}`)
+                    ${selected}${isFilterInQuery && isValidBoilerQuery ? `&boiler=${router.query.boiler}` : ''}
+                    ${isFilterInQuery && isValidPartsQuery ? `&parts=${router.query.parts}` : ''}
+                    ${isFilterInQuery && isValidPriceQuery
+                     ? `&priceFrom=${router.query.priceFrom}&priceTo=${router.query.priceTo}` : ''}`)
 
             router.push({
                 query: {
@@ -208,7 +220,8 @@ const loadBoilerParts = async () => {
                             resetFilters={resetFilters}
                             currentPage={currentPage}
                             setIsFilterInQuery={setisFilterInQuery} 
-                            isPriceRangeChanged={isPriceRangeChanged}                           
+                            isPriceRangeChanged={isPriceRangeChanged}
+                            closePopup={closePopup}                          
                              />
                         {spinner ? (
                             <ul className={skeletonStyles.skeleton}>
