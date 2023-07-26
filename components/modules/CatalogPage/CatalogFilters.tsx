@@ -4,7 +4,7 @@ import { ICatalogFiltersProps } from "@/types/catalog"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import { useStore } from "effector-react"
-import { $boilerManufacturers, $partsManufacturers, setFilteredBoilerParts } from "@/context/boilerParts"
+import { $boilerManufacturers, $partsManufacturers, setBoilerManufacturersFromQuery, setFilteredBoilerParts, setPartsManufacturersFromQuery } from "@/context/boilerParts"
 import { useRouter } from "next/router"
 import { getBoilerPartsFx } from "@/app/api/boilerParts"
 import { getQueryParamOnFirstRender } from "@/utils/common"
@@ -48,9 +48,79 @@ const CatalogFilters = ({
             const partsQuery = `&parts=${getQueryParamOnFirstRender('parts', router)}`
             const priceQuery = `&priceFrom=${priceFromQueryValue}&priceTo=${priceToQueryValue}`
 
+            //проверки на обновление параметров строки
+            if(isValidBoilerQuery && isValidPartsQuery && priceFromQueryValue && priceToQueryValue){
+           
+                updateParamsAndFiltersFromQuery(() => {
+                    updatePriceFromQuery(+priceFromQueryValue, +priceToQueryValue)
+                    setBoilerManufacturersFromQuery(boilerQueryValue)
+                    setPartsManufacturersFromQuery(partsQueryValue)
+                }, `${currentPage}${priceQuery}${boilerQuery}${partsQuery}`)
+                return
+            }
+
+            if(priceFromQueryValue && priceToQueryValue){
+                updateParamsAndFiltersFromQuery(() => {
+                updatePriceFromQuery(+priceFromQueryValue, +priceToQueryValue)
+                }, `${currentPage}${priceQuery}`)
+            }
+
+            if(isValidBoilerQuery && isValidPartsQuery){
+                updateParamsAndFiltersFromQuery(() => {
+                    setIsFilterInQuery(true)
+                    setBoilerManufacturersFromQuery(boilerQueryValue)
+                    setPartsManufacturersFromQuery(partsQueryValue)
+                }, `${currentPage}${boilerQuery}${partsQuery}`)
+                return
+            }
+
+            if(isValidBoilerQuery){
+                updateParamsAndFiltersFromQuery(() => {
+                    setIsFilterInQuery(true)
+                    setBoilerManufacturersFromQuery(boilerQueryValue)
+                }, `${currentPage}${boilerQuery}`)
+               
+            }
+
+            if(isValidPartsQuery){
+                updateParamsAndFiltersFromQuery(() => {
+                    setIsFilterInQuery(true)
+                    setPartsManufacturersFromQuery(partsQueryValue)
+                }, `${currentPage}${partsQuery}`)
+               
+            }
+
+            if(isValidBoilerQuery && priceFromQueryValue && priceToQueryValue){
+                updateParamsAndFiltersFromQuery(() => {
+                updatePriceFromQuery(+priceFromQueryValue, +priceToQueryValue)
+                setBoilerManufacturersFromQuery(boilerQueryValue)
+                }, `${currentPage}${priceQuery}${boilerQuery}`)
+            }
+
+            if(isValidPartsQuery && priceFromQueryValue && priceToQueryValue){
+                updateParamsAndFiltersFromQuery(() => {
+                updatePriceFromQuery(+priceFromQueryValue, +priceToQueryValue)
+                setPartsManufacturersFromQuery(partsQueryValue)
+                }, `${currentPage}${priceQuery}${partsQuery}`)
+            }
+
         }catch(error){
             toast.error((error as Error).message)
         }
+    }
+
+    const updatePriceFromQuery = (priceFrom: number, priceTo: number) => {
+        setIsFilterInQuery(true)
+        setPriceRange([+priceFrom, +priceTo])
+        setIsPriceRangeChanged(true)
+    }
+
+    const updateParamsAndFiltersFromQuery = async (callback: VoidFunction, path: string) => {
+        callback()
+        const data = await getBoilerPartsFx
+        (`/boiler-parts?limit=20&offset=${path}`)
+        setFilteredBoilerParts(data)
+
     }
 
     async function updateParamsAndFilters<T>(updatedParams: T, path: string){
