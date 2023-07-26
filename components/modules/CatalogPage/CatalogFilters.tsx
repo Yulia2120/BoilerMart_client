@@ -53,6 +53,31 @@ const CatalogFilters = ({
         }
     }
 
+    async function updateParamsAndFilters<T>(updatedParams: T, path: string){
+
+        const params = router.query
+        //удаляем старые параметры поисковой строки
+              delete params.boiler
+              delete params.parts
+              delete params.priceFrom
+              delete params.priceTo
+              params.first = 'cheap'
+        router.push(
+            {
+                query:{
+                    ...params,
+                    ...updatedParams
+                   
+                }
+         
+        }, undefined, {shallow: true})
+        const data = await getBoilerPartsFx
+        (`/boiler-parts?limit=20&offset=${path}`)
+        setFilteredBoilerParts(data)
+
+
+    }
+
     const applyFilters = async () => {
         setIsFilterInQuery(true)
         try{
@@ -78,133 +103,82 @@ const CatalogFilters = ({
             //проверка на фильтрацию производителей котлов, производителей деталей и диапазон цены
             if(boilers.length && parts.length && isPriceRangeChanged)
             {
+                updateParamsAndFilters({
+                    boiler: encodedBoilerQuery,
+                    parts: encodedPartsQuery,
+                    priceFrom,
+                    priceTo,
+                    offset: initialPage + 1
 
-                router.push(
-                    {
-                        query:{
-                            ...router.query,
-                            boiler: encodedBoilerQuery,
-                            parts: encodedPartsQuery,
-                            priceFrom,
-                            priceTo,
-                            offset: initialPage + 1
-                        }
-                 
-                }, undefined, {shallow: true})
-                const data = await getBoilerPartsFx
-                (`/boiler-parts?limit=20&offset=${initialPage}${priceQuery}${boilerQuery}${partsQuery}`)
-                setFilteredBoilerParts(data)
+                }, `${initialPage}${priceQuery}${boilerQuery}${partsQuery}`)
 
                 return
             }
             //проверка на фильтрацию диапазона цены
             if(isPriceRangeChanged){
-                router.push(
-                    {
-                        query:{
-                            ...router.query,
-                            priceFrom,
-                            priceTo,
-                            offset: initialPage + 1
-                        }
-                 
-                }, undefined, {shallow: true})
+                updateParamsAndFilters({
+                    priceFrom,
+                    priceTo,
+                    offset: initialPage + 1
 
-                const data = await getBoilerPartsFx
-                (`/boiler-parts?limit=20&offset=${initialPage}${priceQuery}`)
-                setFilteredBoilerParts(data)
+                }, `${initialPage}${priceQuery}`)
 
             }
+
             //проверка на фильтрацию производителей котлов и производителей запчастей
             if(boilers.length && parts.length){
-                router.push(
-                    {
-                        query:{
-                            ...router.query,
-                            boiler: encodedBoilerQuery,
-                            parts: encodedPartsQuery,
-                            offset: initialPage + 1
-                        }
-                 
-                }, undefined, {shallow: true})
+                updateParamsAndFilters({
+                    boiler: encodedBoilerQuery,
+                    parts: encodedPartsQuery,
+                    offset: initialPage + 1
 
-                const data = await getBoilerPartsFx
-                (`/boiler-parts?limit=20&offset=${initialPage}${boilerQuery}${partsQuery}`)
-                setFilteredBoilerParts(data)
+                }, `${initialPage}${boilerQuery}${partsQuery}`)
+           
                 return
-
             }
+
             //проверка на фильтрацию производителей котлов 
             if(boilers.length){
-                router.push(
-                    {
-                        query:{
-                            ...router.query,
-                            boiler: encodedBoilerQuery,
-                            offset: initialPage + 1
-                        }
-                 
-                }, undefined, {shallow: true})
+                updateParamsAndFilters({
+                    boiler: encodedBoilerQuery,
+                    offset: initialPage + 1
 
-                const data = await getBoilerPartsFx
-                (`/boiler-parts?limit=20&offset=${initialPage}${boilerQuery}`)
-                setFilteredBoilerParts(data)
+                }, `${initialPage}${boilerQuery}`)
             
             }
+
             //проверка на фильтрацию производителей запчастей
             if(parts.length){
-                router.push(
-                    {
-                        query:{
-                            ...router.query,
-                            parts: encodedPartsQuery,
-                            offset: initialPage + 1
-                        }
-                 
-                }, undefined, {shallow: true})
+                updateParamsAndFilters({
+                    parts: encodedPartsQuery,
+                    offset: initialPage + 1
 
-                const data = await getBoilerPartsFx
-                (`/boiler-parts?limit=20&offset=${initialPage}${partsQuery}`)
-                setFilteredBoilerParts(data)
-               
-
+                }, `${initialPage}${partsQuery}`)
+           
             }
+
             //проверка на фильтрацию производителей котлов и диапазон цены
             if(boilers.length && isPriceRangeChanged){
-                router.push(
-                    {
-                        query:{
-                            ...router.query,
-                            boiler: encodedBoilerQuery,
-                            priceFrom,
-                            priceTo,
-                            offset: initialPage + 1
-                        }
-                 
-                }, undefined, {shallow: true})
+                updateParamsAndFilters({
+                    boiler: encodedBoilerQuery,
+                    priceFrom,
+                    priceTo,
+                    offset: initialPage + 1
 
-                const data = await getBoilerPartsFx
-                (`/boiler-parts?limit=20&offset=${initialPage}${boilerQuery}${priceQuery}`)
-                setFilteredBoilerParts(data)
+                }, `${initialPage}${priceQuery}${boilerQuery}`)
             
             }
+
                //проверка на фильтрацию производителей запчастей и диапазон цены
                if(parts.length && isPriceRangeChanged){
-                router.push(
-                    {
-                        query:{
-                            ...router.query,
-                            parts: encodedPartsQuery,
-                            priceFrom,
-                            priceTo,
-                            offset: initialPage + 1
-                        }
-                 
-                }, undefined, {shallow: true})
+                updateParamsAndFilters({
+            
+                    parts: encodedPartsQuery,
+                    priceFrom,
+                    priceTo,
+                    offset: initialPage + 1
 
-                const data = await getBoilerPartsFx
-                (`/boiler-parts?limit=20&offset=${initialPage}${partsQuery}${priceQuery}`)
-                setFilteredBoilerParts(data)
+                }, `${initialPage}${priceQuery}${partsQuery}`)
             
             }
           
