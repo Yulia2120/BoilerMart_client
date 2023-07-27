@@ -53,6 +53,7 @@ export interface ICatalogFiltersProps extends ICatalogBaseTypes, ICatalogFilters
     currentPage: number
     setIsFilterInQuery:(arg0: boolean) => void
     closePopup: VoidFunction
+    filtersMobileOpen: boolean
     
 }
 
@@ -79,5 +80,16 @@ export interface IFiltersPopupTop {
     resetFilters: VoidFunction
     resetFilterBtnDisabled: boolean
     closePopup: VoidFunction
+}
+
+export interface IFiltersPopupProps extends IFilterManufacturerAccordionProps{
+
+    resetFilterBtnDisabled: boolean
+    resetAllManufacturers: VoidFunction
+    handleClosePopup: VoidFunction
+    applyFilters: VoidFunction
+    openPopup: boolean
+    
+
 }
 
