@@ -13,10 +13,12 @@ import { IQueryParams } from '@/types/catalog'
 import skeletonStyles from '@/styles/skeleton/index.module.scss'
 import { useRouter } from 'next/router'
 import { IBoilerParts } from '@/types/boierparts'
-import styles from '@/styles/catalog/index.module.scss'
 import CatalogFilters from '@/components/modules/CatalogPage/CatalogFilters'
 import { usePopup } from '@/hooks/usePopup'
 import { checkQueryParams } from '@/utils/catalog'
+import styles from '@/styles/catalog/index.module.scss'
+import FilterSvg from '@/components/elements/FilterSvg/FilterSvg'
+import ManufacturersBlock from '@/components/modules/CatalogPage/ManufacturersBlock'
 
 const CatalogPage = ({query}: {query: IQueryParams}) => {
 
@@ -111,7 +113,7 @@ const loadBoilerParts = async () => {
             const data = await getBoilerPartsFx('/boiler-parts?limit=20&offset=0')
 
             if(selected > pagesCount){
-               resetPagination(data)
+               resetPagination(isFilterInQuery ? filteredBoilerParts : data)
                 return
             }
             if(isValidOffset && +query.offset > Math.ceil(data.count / 2)){
@@ -176,7 +178,7 @@ const loadBoilerParts = async () => {
             setIsPriceRangeChanged(false)
 
         }catch(error){
-
+            toast.error((error as Error).message)
         }
     }
 
@@ -195,7 +197,7 @@ const loadBoilerParts = async () => {
                    />)}
                 </AnimatePresence>
                 <AnimatePresence>
-                    {isAnyPartsManufacturerChecked && (<ManufacturersBock 
+                    {isAnyPartsManufacturerChecked && (<ManufacturersBlock 
                     title='Производитель запчастей:' 
                     event={updatePartsManufacturer}
                     manufacturersList={partsManufacturers}
@@ -206,6 +208,17 @@ const loadBoilerParts = async () => {
                     disabled={resetFilterBtnDisabled}
                     onClick={resetFilters}
                     >Сбросить фильтр
+                    </button>
+                    <button 
+                    className={styles.catalog__top__mobile_btn}
+                    onClick={toggleOpen}
+                    >
+                        <span className={styles.catalog__top__mobile_btn__svg}>
+                            <FilterSvg/>
+                            </span>
+                        <span className={styles.catalog__top__mobile_btn__text}>
+                            Фильтр
+                            </span>
                     </button>
                     <FilterSelect setSpinner={setSpinner}/>
                 </div>
@@ -221,7 +234,8 @@ const loadBoilerParts = async () => {
                             currentPage={currentPage}
                             setIsFilterInQuery={setisFilterInQuery} 
                             isPriceRangeChanged={isPriceRangeChanged}
-                            closePopup={closePopup}                          
+                            closePopup={closePopup}  
+                            filtersMobileOpen={open}                        
                              />
                         {spinner ? (
                             <ul className={skeletonStyles.skeleton}>
