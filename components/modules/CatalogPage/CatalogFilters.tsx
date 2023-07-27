@@ -29,6 +29,7 @@ const CatalogFilters = ({
   currentPage,
   setIsFilterInQuery,
   closePopup,
+  filtersMobileOpen
 }: ICatalogFiltersProps) => {
   const isMobile = useMediaQuery(820)
   const [spinner, setSpinner] = useState(false)
@@ -255,7 +256,7 @@ const CatalogFilters = ({
           setPriceRange={setPriceRange}
           resetFilterBtnDisabled={resetFilterBtnDisabled}
           resetFilters={resetFilters}
-    
+          filtersMobileOpen={filtersMobileOpen}
         />
       ) : (
         <CatalogFiltersDesktop
