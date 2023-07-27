@@ -6,7 +6,7 @@ import FilterManufacturerAccordion from "./FilterManufacturerAccordion"
 import FiltersPopupTop from "./FiltersPopupTop"
 
 
-const FilterPopup = ({
+const FiltersPopup = ({
 resetFilterBtnDisabled,
 resetAllManufacturers,
 handleClosePopup,
@@ -57,4 +57,4 @@ manufacturersList
 
 }
 
-export default FilterPopup
+export default FiltersPopup
