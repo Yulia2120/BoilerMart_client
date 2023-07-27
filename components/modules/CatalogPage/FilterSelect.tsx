@@ -10,7 +10,7 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import Select from "react-select"
 
-const FilterSelect = ({setSpinner}: {setSpinner: () => void}) => {
+const FilterSelect = ({setSpinner}: {setSpinner: (arg0: boolean) => void}) => {
     const mode = useStore($mode)
     const boilerParts = useStore($boilerParts)
     const [categoryOption, setCategoryOption] = useState<SelectOptionType>(null)
