@@ -7,8 +7,8 @@ import { useEffect, useState } from "react"
 import styles from '@/styles/cartPopup/index.module.scss'
 import spinnerStyles from '@/styles/spinner/index.module.scss'
 import { formatPrice } from "@/utils/common"
-import { removeItemFromCart } from "@/utils/shopping-cart"
-import { updateTotalPrice } from "@/utils/catalog"
+import { removeItemFromCart, updateTotalPrice } from "@/utils/shopping-cart"
+import CartItemCounter from "@/components/elements/CartItemCounter/CartItemCounter"
 
 const CartPopupItem = ({item}: {item: IShoppingCartItem}) => {
     const mode = useStore($mode)
@@ -49,10 +49,19 @@ const CartPopupItem = ({item}: {item: IShoppingCartItem}) => {
             </div>
             <div className={styles.cart__popup__list__item__bottom}>
                 {item.in_stock === 0 ? (
-                    <span className={styles.cart__popup__list__item__empty}>Нет на складе</span>
-                ) : <div/>}
+                    <span className={styles.cart__popup__list__item__empty}>
+                        Нет на складе
+                        </span>
+                ) : (<CartItemCounter
+                    totalCount={item.in_stock}
+                    partId={item.partId}
+                    initialCount={item.count}
+                    increasePrice={increasePrice}
+                    decreasePrice={decreasePrice}
+                />
+                )}
                 <span className={`${styles.cart__popup__list__item__price} ${darkModeClass}`}>
-                    {formatPrice(item.price)} UAN
+                    {formatPrice(price)} UAN
                     </span>
             </div>
         </li>
