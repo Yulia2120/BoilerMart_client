@@ -7,7 +7,6 @@ const MinusSvg = () => (
     xmlns="http://www.w3.org/2000/svg">
 <path 
 d="M4.16675 10.5H15.8334" 
-stroke="black" 
 strokeLinecap="round" 
 strokeLinejoin="round"/>
 </svg>
