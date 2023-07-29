@@ -1,9 +1,9 @@
-import { setBoilerManufacturersFromQuery, setFilteredBoilerParts, setPartsManufacturersFromQuery } from "@/context/boilerParts";
+
 import { getQueryParamOnFirstRender, idGenerator } from "./common";
-import router, { NextRouter } from "next/router";
+import  { NextRouter } from "next/router";
 import { getBoilerPartsFx } from "@/app/api/boilerParts";
-import { updateCartItemFx } from "@/app/api/shopping-cart";
-import { updateCartItemTotalPrice } from "@/context/shopping-cart";
+import { setFilteredBoilerParts } from "@/context/boilerParts";
+
 
 const createManufacturerCheckboxObj = (title: string) => ({
     title,
@@ -103,16 +103,7 @@ export const boilerManufacturers = [
           setFilteredBoilerParts(data)
       }
 
-  export const updateTotalPrice = async (
-        total_price: number, 
-        partId: number) => {
-          const data = await updateCartItemFx({
-            url: `/shopping-cart/total-price/${partId}`,
-            payload: {total_price}
-          })
 
-        updateCartItemTotalPrice({partId, total_price: data.total_price})
-      }
     
 
 
