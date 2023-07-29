@@ -41,8 +41,8 @@ export const $shoppingCart = shoppingCart
   .on(setShoppingCart, (_, shoppingCart) => shoppingCart)
   .on(updateShoppingCart, (state, cartItem) => [...state, cartItem])
   .on(removeShoppingCartItem, (state, partId) => [...remove(state, partId)])
-  .on(updateCartItemTotalPrice, (state, {partId, total_price}) => [...updateCartItem(state, partId, {total_price})])
-  .on(updateCartItemCount, (state, {partId, count}) => [...updateCartItem(state, partId, {count})])
+  .on(updateCartItemTotalPrice, (state, {partId, total_price}) => [...updateCartItem(state, partId, {total_price}),])
+  .on(updateCartItemCount, (state, {partId, count}) => [...updateCartItem(state, partId, {count}),])
 
 
 export const $totalPrice = shoppingCart
