@@ -14,7 +14,8 @@ export const toggleCartItem = async (
                 removeShoppingCartItem(partId)
                 return
             }
-            const data = await addToCartFx({
+
+      const data = await addToCartFx({
                 url: '/shopping-cart/add',
                 username,
                 partId
