@@ -14,3 +14,10 @@ export const getBoilerPartsFx = createEffect(async (url: string) => {
     return data
 
 })
+
+export const getBoilerPartFx = createEffect(async (url: string) => {
+    const {data} = await api.get(url)
+
+    return data
+
+})
