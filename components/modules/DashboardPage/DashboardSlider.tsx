@@ -1,10 +1,10 @@
 import Slider from "react-slick";
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
+import { useEffect } from "react";
 import { useStore } from "effector-react";
 import { $mode } from "@/context/mode";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { useEffect } from "react";
-import 'slick-carousel/slick/slick.css'
-import 'slick-carousel/slick/slick-theme.css'
 import { IDashboardSlider } from "@/types/dashboard";
 import Link from "next/link";
 import { formatPrice } from "@/utils/common";
