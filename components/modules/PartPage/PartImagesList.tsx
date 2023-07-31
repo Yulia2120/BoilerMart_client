@@ -18,8 +18,9 @@ const PartImagesList = () => {
        <div className={styles.part__images}>
         {isMobile ? (
             <PartSlider images={images}/>
-        ) : <>
-       (
+        ) : (
+        <>
+       
         <div className={styles.part__images__main}>
             <img src={currentImgSrc || images[0]} alt={boilerPart.name} />
         </div>
@@ -31,10 +32,10 @@ const PartImagesList = () => {
             src={item}
             />)}
         </ul>
-       )
+       
         </>
 
-        }
+        )}
 
        </div>
     )
