@@ -25,12 +25,15 @@ const PartImagesList = () => {
             <img src={currentImgSrc || images[0]} alt={boilerPart.name} />
         </div>
         <ul className={styles.part__images__list}>
-            {images.map((item, i) => <PartImagesItem 
+            {images.map((item, i) => 
+           (
+            <PartImagesItem 
             key={i} 
             alt={`image-${i+1}`}
             callback={setCurrentImgSrc}
             src={item}
-            />)}
+            />
+           ))}
         </ul>
        
         </>

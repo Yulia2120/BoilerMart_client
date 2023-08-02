@@ -35,7 +35,7 @@ const DashboardSlider = ({items, spinner, goToPartPage}: IDashboardSlider) => {
             list.style.marginRight = isMedia560 ? '-8px' : isMedia800 ? '-15px' : '0'
         })
 
-    }, [isMedia768])
+    }, [isMedia560, isMedia800])
 
 
     const settings = {
@@ -64,10 +64,12 @@ const DashboardSlider = ({items, spinner, goToPartPage}: IDashboardSlider) => {
             )))
             : items.length ? (
               items.map((item) => (
-                <div className={`${styles.dashboard__slide} ${darkModeClass}`} key={item.id} style={width}>
+                <div className={`${styles.dashboard__slide} ${darkModeClass}`}
+                 key={item.id} 
+                 style={width}>
                     <img src={JSON.parse(item.images)[0]} alt={item.name} />
                     <div className={styles.dashboard__slide__inner}>
-                        <Link href={goToPartPage ? '/catalog/${item.id}' : '/catalog'} legacyBehavior>
+                        <Link href={goToPartPage ? `/catalog/${item.id}` : '/catalog'} legacyBehavior>
                             <a href="">
                                 <h3 className={styles.dashboard__slide__title}>{item.name}</h3>
                             </a>
