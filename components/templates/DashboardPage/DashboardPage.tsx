@@ -26,6 +26,14 @@ import styles from '@/styles/dashboard/index.module.scss'
     loadBoilerParts()
  }, [])
 
+ useEffect(() => {
+    if(shoppingCart.length){
+        setShowAlert(true)
+        return
+    }
+    setShowAlert(false)
+ }, [shoppingCart.length])
+
  const loadBoilerParts = async () => {
     try{
         setSpinner(true)
@@ -54,7 +62,7 @@ import styles from '@/styles/dashboard/index.module.scss'
                 className={`${styles.dashboard__alert} ${darkModeClass}`}
                 >
                     <CartAlert 
-                count={shoppingCart.length} 
+                count={shoppingCart.reduce((defaultCount, item) => defaultCount + item.count, 0)} 
                 closeAlert={closeAlert}/>
                 </motion.div>}
             </AnimatePresence>
