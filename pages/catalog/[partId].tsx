@@ -6,9 +6,10 @@ import useRedirectByUserCheck from '@/hooks/useRedirectByUserCheck'
 import { IQueryParams } from '@/types/catalog'
 import { useStore } from 'effector-react'
 import Head from 'next/head'
-import router from 'next/router'
-import { useEffect } from 'react'
+import router, { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
+import Custom404 from '../404'
 
 
 
@@ -16,7 +17,10 @@ import { toast } from 'react-toastify'
     //страница для авторизованного пользователя
   const {shouldLoadContent} = useRedirectByUserCheck()
   const boilerPart = useStore($boilerPart)
-
+  const [error, setError] = useState(false)
+  const router = useRouter()
+  
+  //когда меняется слаг в адресной строке, подгружается контент
     useEffect(() => {
         loadBoilerPart()
     }, [router.asPath])
@@ -24,6 +28,11 @@ import { toast } from 'react-toastify'
   const loadBoilerPart = async () => {
     try {
         const data = await getBoilerPartFx(`/boiler-parts/find/${query.partId}`)
+
+        if(!data){
+          setError(true)
+          return
+        }
 
         setBoilerPart(data)
     } catch (error) {
@@ -40,14 +49,19 @@ import { toast } from 'react-toastify'
         <meta name="viewport" content='width=device-width, initial-scale=1.0' />
         <link rel="icon" type='image/svg' sizes='32x32' href="/img/logo.svg" />
       </Head>
-     {shouldLoadContent && (
-       <Layout>
-       <main>
-             <PartPage/>
-       <div className="overlay"/>
-      </main>
-       </Layout>
-     )}
+      {error ? (
+        <Custom404/>
+      ) : (
+        shouldLoadContent && (
+          <Layout>
+          <main>
+                <PartPage/>
+          <div className="overlay"/>
+         </main>
+          </Layout>
+        )
+      )}
+   
     </>
   )
 }
