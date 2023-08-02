@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useStore } from "effector-react"
+import { toast } from "react-toastify"
 import { $mode } from "@/context/mode"
 import { $boilerPart } from "@/context/boilerPart"
 import PartImagesList from "@/components/modules/PartPage/PartImagesList"
@@ -10,14 +11,13 @@ import CartHoverCheckedSvg from "@/components/elements/CartHoverCheckedSvg/CartH
 import { toggleCartItem } from "@/utils/shopping-cart"
 import { $user } from "@/context/user"
 import { useMediaQuery } from "@/hooks/useMediaQuery"
-import spinnerStyles from '@/styles/spinner/index.module.scss'
-import styles from '@/styles/part/index.module.scss' 
 import PartTabs from "@/components/modules/PartPage/PartTabs"
 import DashboardSlider from "@/components/modules/DashboardPage/DashboardSlider"
-import { toast } from "react-toastify"
 import { $boilerParts, setBoilerParts, setBoilerPartsByPopularity } from "@/context/boilerParts"
 import { getBoilerPartsFx } from "@/app/api/boilerParts"
 import PartAccordion from "@/components/modules/PartPage/PartAccordion"
+import spinnerStyles from '@/styles/spinner/index.module.scss'
+import styles from '@/styles/part/index.module.scss' 
 
 
 const PartPage = () => {
