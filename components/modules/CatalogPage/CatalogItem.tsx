@@ -1,6 +1,5 @@
 
 import { useStore } from "effector-react"
-import { useState } from "react"
 import Link from "next/link"
 import { $mode } from "@/context/mode"
 import { IBoilerPart } from "@/types/boierparts"
