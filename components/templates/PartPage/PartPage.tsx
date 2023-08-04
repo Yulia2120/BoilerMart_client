@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useStore } from "effector-react"
 import { toast } from "react-toastify"
 import { $mode } from "@/context/mode"
@@ -18,6 +18,7 @@ import { getBoilerPartsFx } from "@/app/api/boilerParts"
 import PartAccordion from "@/components/modules/PartPage/PartAccordion"
 import spinnerStyles from '@/styles/spinner/index.module.scss'
 import styles from '@/styles/part/index.module.scss' 
+import { removeFromCartFx } from "@/app/api/shopping-cart"
 
 
 const PartPage = () => {
@@ -29,8 +30,8 @@ const PartPage = () => {
     const cartItems = useStore($shoppingCart)
     const darkModeClass = mode === 'dark' ? `${styles.dark_mode}` : ''
     const isInCart = cartItems.some((item) => item.partId === boilerPart.id)
-    const [spinnerToggleCart, setSpinnerToggleCart] = useState(false)
-    const [spinnerSlider, setSpinnerSlider] = useState(false)
+    const spinnerToggleCart = useStore(removeFromCartFx.pending)
+    const spinnerSlider = useStore(getBoilerPartsFx.pending)
 
     useEffect(() => {
         loadBoilerPart()
@@ -38,7 +39,7 @@ const PartPage = () => {
 
     const loadBoilerPart = async () => {
         try {
-            setSpinnerSlider(true)
+            
             const data = await getBoilerPartsFx('/boiler-parts?limit=20&offset=0')
 
             setBoilerParts(data)
@@ -46,8 +47,6 @@ const PartPage = () => {
 
         } catch (error) {
             toast.error((error as Error).message) 
-        }finally {
-            setTimeout(() => setSpinnerSlider(false), 1000)
         }
     }
 

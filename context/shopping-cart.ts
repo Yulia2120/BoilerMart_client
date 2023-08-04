@@ -9,12 +9,12 @@ export const setShoppingCart = shoppingCart.createEvent<IShoppingCartItem[]>()
 export const updateShoppingCart = shoppingCart.createEvent<IShoppingCartItem>()
 export const removeShoppingCartItem = shoppingCart.createEvent<number>()
 export const setTotalPrice = shoppingCart.createEvent<number>()
+export const setDisableCart = shoppingCart.createEvent<boolean>()
 export const updateCartItemTotalPrice = shoppingCart.createEvent<{partId: number, total_price: number }>()
 export const updateCartItemCount = shoppingCart.createEvent<{partId: number, count: number }>()
 
 const remove = (cartItems: IShoppingCartItem[], partId: number) =>
   cartItems.filter((item) => item.partId !== partId)
-
 
 
 
@@ -48,3 +48,7 @@ export const $shoppingCart = shoppingCart
 export const $totalPrice = shoppingCart
     .createStore<number>(0)
     .on(setTotalPrice, (_, value) => value)
+
+    export const $disableCart = shoppingCart
+    .createStore<boolean>(false)
+    .on(setDisableCart, (_, value) => value)
