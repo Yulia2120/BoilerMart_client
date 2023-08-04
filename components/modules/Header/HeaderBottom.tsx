@@ -8,11 +8,23 @@ import ModeToggler from "@/components/elements/modeToggler/modeToggler"
 import CartPopup from "./CartPopup/CartPopup"
 import styles from '@/styles/header/index.module.scss'
 import { useMediaQuery } from "@/hooks/useMediaQuery"
+import { useEffect } from "react"
+import { useRouter } from "next/router"
+import { setDisableCart } from "@/context/shopping-cart"
 
 const HeaderBottom = () =>{
     const isMedia950 = useMediaQuery(950)
     const mode = useStore($mode)
     const darkModeClass = mode === 'dark' ? `${styles.dark_mode}` : ''
+    const router = useRouter()
+
+    useEffect(() => {
+        if(router.pathname === '/order'){
+            setDisableCart(true)
+            return
+        }
+        setDisableCart(false)
+    }, [router.pathname])
 
     return(
         <div className={styles.header__bottom}>
