@@ -5,9 +5,9 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useEffect } from "react";
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-import styles from '@/styles/dashboard/index.module.scss'
 import BrandSliderNextArrow from "@/components/elements/BrandsSliderNextArrow/BrandsSliderNextArrow";
 import BrandSliderPrevArrow from "@/components/elements/BrandsSliderPrevArrow/BrandsSliderPrevArrow";
+import styles from '@/styles/dashboard/index.module.scss'
 
 const BrandsSlider = () => {
     const isMedia768 = useMediaQuery(768)

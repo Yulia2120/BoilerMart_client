@@ -17,8 +17,8 @@ import { $boilerParts, setBoilerParts, setBoilerPartsByPopularity } from "@/cont
 import { getBoilerPartsFx } from "@/app/api/boilerParts"
 import PartAccordion from "@/components/modules/PartPage/PartAccordion"
 import spinnerStyles from '@/styles/spinner/index.module.scss'
-import styles from '@/styles/part/index.module.scss' 
 import { removeFromCartFx } from "@/app/api/shopping-cart"
+import styles from '@/styles/part/index.module.scss' 
 
 
 const PartPage = () => {
