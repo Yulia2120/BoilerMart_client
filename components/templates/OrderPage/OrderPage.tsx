@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 import { checkPaymentFx, makePaymentFx } from '@/app/api/payment'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
-import { $user } from '@/context/user'
+import { $user, $userCity } from '@/context/user'
 import { removeFromCartFx } from '@/app/api/shopping-cart'
 import spinnerStyles from '@/styles/spinner/index.module.scss'
 import styles from '@/styles/order/index.module.scss'
@@ -16,6 +16,7 @@ import styles from '@/styles/order/index.module.scss'
 const OrderPage = () => {
     const mode = useStore($mode)
     const user = useStore($user)
+    const userCity = useStore($userCity)
     const shoppingCart = useStore($shoppingCart)
     const totalPrice = useStore($totalPrice)
     const darkModeClass = mode === 'dark' ? `${styles.dark_mode}` : ''
@@ -39,13 +40,12 @@ const OrderPage = () => {
         try {
             const data = await makePaymentFx({
               url: '/payment',
-              amount: totalPrice  
+              amount: totalPrice,
+              description: `Заказ №1 ${userCity.city.length ? `Город: ${userCity.city}, улица: ${userCity.street}` : ''}`  
             })
             sessionStorage.setItem('paymentId', data.id)
             router.push(data.confirmation.confirmation_url)
 
-            // await removeFromCartFx(`/shopping-cart/all/${user.userId}`)
-            // setShoppingCart([])
             
         } catch (error) {
             toast.error((error as Error).message)
