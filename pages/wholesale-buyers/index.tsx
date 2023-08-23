@@ -1,8 +1,12 @@
 import Layout from '@/components/layout/Layout'
+import Breadcrumbs from '@/components/modules/Breadcrumbs/Breadcrumbs'
 import ContactsPage from '@/components/templates/ContactsPage/ContactsPage'
 import Head from 'next/head'
+import { useCallback } from 'react'
 
 function WholesaleBuyers() {
+    const getDefaultTextGenerator = useCallback(() => 'Оптовым покупателям', [])
+    const getTextGenerator = useCallback((param: string) => ({}[param]), [])
 
     return(
         <>
@@ -15,6 +19,10 @@ function WholesaleBuyers() {
       </Head>
       <Layout>
        <main>
+       <Breadcrumbs
+        getDefaultTextGenerator={getDefaultTextGenerator}
+        getTextGenerator={getTextGenerator}
+        />
       <ContactsPage isWholesaleBuersPage={true}/>
        <div className="overlay"></div>
       </main>

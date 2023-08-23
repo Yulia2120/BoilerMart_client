@@ -1,13 +1,17 @@
 import Layout from '@/components/layout/Layout'
+import Breadcrumbs from '@/components/modules/Breadcrumbs/Breadcrumbs'
 import CatalogPage from '@/components/templates/CatalogPage/CatalogPage'
 import useRedirectByUserCheck from '@/hooks/useRedirectByUserCheck'
 import { IQueryParams } from '@/types/catalog'
 import Head from 'next/head'
+import { useCallback } from 'react'
 
 
 
  function Catalog({query}: {query: IQueryParams}) {
   const {shouldLoadContent} = useRedirectByUserCheck()
+  const getDefaultTextGenerator = useCallback(() => 'Каталог', [])
+  const getTextGenerator = useCallback((param: string) => ({}[param]), [])
   
   return (
     <>
@@ -21,6 +25,10 @@ import Head from 'next/head'
      {shouldLoadContent && (
        <Layout>
        <main>
+       <Breadcrumbs
+        getDefaultTextGenerator={getDefaultTextGenerator}
+        getTextGenerator={getTextGenerator}
+        />
        <CatalogPage query={query}/>
        <div className="overlay"/>
       </main>
