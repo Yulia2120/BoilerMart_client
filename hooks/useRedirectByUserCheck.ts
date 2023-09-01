@@ -23,7 +23,7 @@ const useRedirectByUserCheck = (isAuthPage = false) => {
             setShouldLoadContent(true)
             return
         }
-        router.push('/dashboard')
+        router.push('/home')
         return
     }
     if(user) {

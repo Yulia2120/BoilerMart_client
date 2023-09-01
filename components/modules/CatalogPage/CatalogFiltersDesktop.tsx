@@ -8,6 +8,7 @@ import PriceRange from "./PriceRange"
 import { ICatalogFilterDesktopProps } from "@/types/catalog"
 import spinnerStyles from '@/styles/spinner/index.module.scss'
 
+
 function CatalogFiltersDesktop({
     priceRange, setPriceRange, setIsPriceRangeChanged, resetFilterBtnDisabled, spinner, resetFilters, applyFilters
 }: ICatalogFilterDesktopProps) {

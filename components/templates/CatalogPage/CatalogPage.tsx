@@ -20,6 +20,8 @@ import styles from '@/styles/catalog/index.module.scss'
 import FilterSvg from '@/components/elements/FilterSvg/FilterSvg'
 import ManufacturersBlock from '@/components/modules/CatalogPage/ManufacturersBlock'
 
+
+
 const CatalogPage = ({query}: {query: IQueryParams}) => {
 
 const mode = useStore($mode)

@@ -19,6 +19,8 @@ import {
   updateParamsAndFiltersFromQuery,
 } from '@/utils/catalog'
 
+
+
 const CatalogFilters = ({
   priceRange,
   setPriceRange,

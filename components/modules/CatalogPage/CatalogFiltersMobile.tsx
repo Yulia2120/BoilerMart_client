@@ -11,6 +11,7 @@ import { useMediaQuery } from "@/hooks/useMediaQuery"
 import Accordion from "@/components/elements/Accordion/Accordion"
 import PriceRange from "./PriceRange"
 
+
 const CatalogFiltersMobile = ({
     spinner, 
     resetFilterBtnDisabled, 
