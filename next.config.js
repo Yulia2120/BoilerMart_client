@@ -4,7 +4,7 @@ const nextConfig = {
   sassOptions: {
     fiber: false,
   }
-  async headers() {
+   headers() {
     return [
       {
         // matching all API routes
